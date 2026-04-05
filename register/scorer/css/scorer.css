@@ -1,0 +1,548 @@
+/* ===== B2L スコアラーアプリ CSS ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: #0a0a1a;
+    --surface: #1a1a2e;
+    --surface2: #16213e;
+    --primary: #e94560;
+    --accent: #0f3460;
+    --text: #ffffff;
+    --text2: #a0a0b0;
+    --made: #00c853;
+    --miss: #ff5252;
+    --warning: #ffab00;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.screen {
+    display: none;
+    min-height: 100vh;
+}
+
+.screen.active {
+    display: block;
+}
+
+/* ===== ログイン ===== */
+.login-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.login-box h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.login-box p {
+    color: var(--text2);
+    margin-bottom: 20px;
+}
+
+.login-box input {
+    width: 100%;
+    max-width: 400px;
+    padding: 15px;
+    border: 2px solid var(--accent);
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--text);
+    font-size: 1rem;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.error {
+    color: var(--miss);
+    margin-top: 10px;
+}
+
+/* ===== ボタン共通 ===== */
+.btn-primary {
+    padding: 15px 40px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-primary:active {
+    transform: scale(0.95);
+}
+
+.btn-sm {
+    padding: 8px 16px;
+    background: var(--surface2);
+    color: var(--text);
+    border: 1px solid #333;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.btn-xs {
+    padding: 4px 10px;
+    background: var(--accent);
+    color: var(--text);
+    border: none;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+.btn-danger {
+    background: var(--miss) !important;
+    border-color: var(--miss) !important;
+}
+
+.btn-close {
+    background: none;
+    border: none;
+    color: var(--text2);
+    font-size: 1.5rem;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+}
+
+/* ===== 試合一覧 ===== */
+#screen-games header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: var(--surface);
+    border-bottom: 1px solid #333;
+}
+
+.games-list {
+    padding: 15px;
+}
+
+.game-card {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+    border: 2px solid transparent;
+}
+
+.game-card:active {
+    border-color: var(--primary);
+    transform: scale(0.98);
+}
+
+.game-card .teams {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.game-card .vs {
+    color: var(--text2);
+    font-size: 0.9rem;
+}
+
+.game-card .meta {
+    color: var(--text2);
+    font-size: 0.8rem;
+    margin-top: 8px;
+}
+
+.game-card.live {
+    border-color: var(--primary);
+}
+
+.game-card.live::before {
+    content: '🔴 LIVE';
+    color: var(--primary);
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+/* ===== スコアボード ===== */
+#scoreboard {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 12px 15px;
+    background: linear-gradient(135deg, var(--surface), var(--surface2));
+    border-bottom: 2px solid var(--primary);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.team-score {
+    text-align: center;
+}
+
+.team-score .team-name {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.team-score .score {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 900;
+}
+
+.team-score .fouls {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text2);
+}
+
+.game-info {
+    text-align: center;
+    padding: 0 15px;
+}
+
+.game-info .quarter {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--primary);
+}
+
+.game-info .time {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--text2);
+}
+
+.game-controls {
+    margin-top: 5px;
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+}
+
+/* ===== チームタブ ===== */
+.team-tabs {
+    display: flex;
+    position: sticky;
+    top: 100px;
+    z-index: 99;
+    background: var(--bg);
+}
+
+.team-tab {
+    flex: 1;
+    padding: 12px;
+    background: var(--surface);
+    border: none;
+    color: var(--text2);
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.team-tab.active {
+    color: var(--text);
+    border-bottom: 3px solid var(--primary);
+    background: var(--surface2);
+}
+
+/* ===== 選手グリッド ===== */
+.players-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    padding: 10px;
+}
+
+.player-btn {
+    background: var(--surface);
+    border: 2px solid transparent;
+    border-radius: 10px;
+    padding: 10px 4px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.15s;
+    color: var(--text);
+}
+
+.player-btn:active {
+    transform: scale(0.93);
+}
+
+.player-btn.selected {
+    border-color: var(--primary);
+    background: var(--surface2);
+}
+
+.player-btn.oncourt {
+    border-color: var(--made);
+}
+
+.player-btn .number {
+    font-size: 1.4rem;
+    font-weight: 900;
+}
+
+.player-btn .name {
+    font-size: 0.6rem;
+    color: var(--text2);
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.player-btn .pts {
+    font-size: 0.75rem;
+    color: var(--primary);
+    font-weight: bold;
+    margin-top: 2px;
+}
+
+/* ===== アクションパネル ===== */
+.action-panel {
+    background: var(--surface);
+    border-top: 2px solid var(--primary);
+    padding: 10px;
+    position: sticky;
+    bottom: 50px;
+    z-index: 98;
+}
+
+.action-panel.hidden {
+    display: none;
+}
+
+.selected-player {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.action-group {
+    flex: 1;
+}
+
+.action-group h4 {
+    font-size: 0.7rem;
+    color: var(--text2);
+    margin-bottom: 5px;
+}
+
+.action-buttons {
+    flex-wrap: wrap;
+}
+
+.action-group {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+}
+
+.action-group h4 {
+    grid-column: 1 / -1;
+}
+
+.btn-action {
+    padding: 12px 6px;
+    border: none;
+    border-radius: 8px;
+    background: var(--accent);
+    color: var(--text);
+    font-size: 0.8rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.1s;
+}
+
+.btn-action:active {
+    transform: scale(0.9);
+    opacity: 0.8;
+}
+
+.btn-made {
+    background: var(--made);
+    color: #000;
+}
+
+.btn-miss {
+    background: #444;
+    color: var(--miss);
+}
+
+.btn-three {
+    background: #00c853;
+}
+
+.btn-ft {
+    background: #00a844;
+}
+
+.btn-neg {
+    background: #5c2030;
+    color: var(--miss);
+}
+
+/* ===== プレイログ ===== */
+.play-log {
+    padding: 10px;
+}
+
+.play-log h4 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+    color: var(--text2);
+}
+
+.play-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 10px;
+    background: var(--surface);
+    border-radius: 6px;
+    margin-bottom: 4px;
+    font-size: 0.8rem;
+}
+
+.play-item .play-desc {
+    flex: 1;
+}
+
+.play-item .play-undo {
+    background: var(--miss);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-size: 0.7rem;
+    cursor: pointer;
+}
+
+/* ===== オーバーレイ ===== */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.overlay.hidden {
+    display: none;
+}
+
+.overlay-content {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 20px;
+    width: 95%;
+    max-height: 85vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.box-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.7rem;
+    margin-top: 10px;
+}
+
+.box-table th,
+.box-table td {
+    padding: 5px 3px;
+    text-align: center;
+    border-bottom: 1px solid #333;
+}
+
+.box-table th {
+    color: var(--primary);
+    font-size: 0.65rem;
+}
+
+/* ===== フッター ===== */
+.footer-controls {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background: var(--surface);
+    border-top: 1px solid #333;
+    position: sticky;
+    bottom: 0;
+    z-index: 97;
+}
+
+/* ===== レスポンシブ ===== */
+@media (max-width: 400px) {
+    .players-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .player-btn .number {
+        font-size: 1.1rem;
+    }
+
+    .team-score .score {
+        font-size: 2rem;
+    }
+
+    .action-group {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 768px) {
+    .players-grid {
+        grid-template-columns: repeat(6, 1fr);
+    }
+
+    .action-buttons {
+        flex-wrap: nowrap;
+    }
+}
