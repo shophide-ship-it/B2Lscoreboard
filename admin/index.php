@@ -1,27 +1,33 @@
 <?php
-// エラーメッセージ表示設定
+// エラーメッセージを表示する設定
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// データベース接続（省略）
+// データベース接続の設定
+try {
+    $pdo = new PDO('mysql:host=mysql3114.db.sakura.ne.jp;dbname=kasugai-sp_b2l-league;charset=utf8', 'kasugai-sp_b2l-league', 'B2L_db2025secure');
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    echo "データベース接続成功"; // 成功メッセージ
+} catch (PDOException $e) {
+    echo 'データベース接続エラー: ' . htmlspecialchars($e->getMessage());
+    exit; // スクリプトを終了
+}
 
 // 初期化
 $flash = ['type' => '', 'message' => ''];
 $filter = $_GET['filter'] ?? 'pending'; // フィルタ用
 
-// 管理者の判定
+// 管理者ユーザーの判定
 $adminUser = $_SERVER['PHP_AUTH_USER'] ?? 'ゲスト';
 
-// 他の処理（省略）
-
-// エラーメッセージを表示する箇所でnullチェック
-if (isset($flash['message'])) {
-    echo htmlspecialchars($flash['message']);
+// 統計情報やDBクエリの処理部分
+try {
+    $stats = $pdo->query("SELECT ...")->fetch(); // 必要なSQL
+} catch (Exception $e) {
+    echo 'エラー発生: ' . htmlspecialchars($e->getMessage());
+    exit; // スクリプトを終了
 }
-
-// 他のコード（省略）
-
 // 統計情報の表示部分やDB取得部分でも同様に初期化を行う
 
 try {
