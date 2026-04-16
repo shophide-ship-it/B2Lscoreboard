@@ -1,48 +1,47 @@
 <?php
-// エラー表示を有効化
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+// 省略された初期設定コード...
 
-// データベース接続情報
-$host = 'mysql3114.db.sakura.ne.jp';
-$db = 'kasugai-sp_b2l-league';
-$user = 'kasugai-sp_b2l-league';
-$password = 'B2L_db2025secure';
+// エラーハンドリング
 
-try {
-    // PDO接続の設定
-    $dsn = "mysql:host=$host;dbname=$db;charset=utf8mb4";
-    $options = [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::ATTR_EMULATE_PREPARES => false,
-    ];
-
-    // データベースに接続
-    $pdo = new PDO($dsn, $user, $password, $options);
-} catch (PDOException $e) {
-    // エラーが発生した場合にはメッセージを表示
-    echo 'Connection failed: ' . $e->getMessage();
-    exit; // スクリプトを終了
+// POST処理（承認・却下）
+$flash = ['type' => '', 'message' => ''];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // ここに承認・却下処理が続きます...
 }
 
-// ここに他の処理を追加
+// 変数の初期化
+$flash = $flash ?? ['type' => '', 'message' => ''];
+$stats = $stats ?? ['pending_count' => 0, 'approved_count' => 0, 'rejected_count' => 0, 'total_count' => 0];
+$totalPlayers = $totalPlayers ?? 0;
+$filter = $_GET['filter'] ?? 'pending';
+
+// データ取得
+try {
+    // 統計情報の取得
+    $stats = $pdo->query("SELECT SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending_count,
+                                   SUM(CASE WHEN status = 'approved' THEN 1 ELSE 0 END) as approved_count,
+                                   SUM(CASE WHEN status = 'rejected' THEN 1 ELSE 0 END) as rejected_count,
+                                   COUNT(*) as total_count 
+                           FROM team_registrations")->fetch(PDO::FETCH_ASSOC);
+    $totalPlayers = $pdo->query("SELECT COUNT(*) FROM player_registrations")->fetchColumn();
+    // 後続の処理...
+} catch (Exception $e) {
+    // エラーハンドリング
+    echo 'エラーが発生しました: ' . htmlspecialchars($e->getMessage());
+}
+
+// 表示部分
+
+// 管理者情報
+$adminUser = htmlspecialchars($_SERVER['PHP_AUTH_USER'] ?? 'ゲスト'); // デフォルトは「ゲスト」
+
+echo "<h1>管理パネル</h1>";
+echo "<p>管理者: {$adminUser}</p>";
+echo "<p>保留中: {$stats['pending_count']}</p>";
+echo "<p>承認済: {$stats['approved_count']}</p>";
+echo "<p>却下: {$stats['rejected_count']}</p>";
+echo "<p>総選手数: {$totalPlayers}</p>";
 ?>
-
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <title>Admin Panel</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <h1>管理パネル</h1>
-    <!-- コンテンツここに追加 -->
-</body>
-</html>
-
 
 // ============================================================
 // ヘルパー関数
