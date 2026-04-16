@@ -21,27 +21,25 @@ if (!isset($_SERVER['PHP_AUTH_USER']) ||
     die('認証が必要です。');
 }
 
-// ============================================================
-// DB接続
-// ============================================================
-$db_host = 'mysql80.kasugai-sp.sakura.ne.jp';
-$db_name = 'kasugai-sp_b2l';
-$db_user = 'kasugai-sp';
-$db_pass = 'Basketball2025';
+<?php
+// エラーメッセージ表示の設定
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+// データベース接続情報
+$host = 'mysql3114.db.sakura.ne.jp'; // Host
+$dbname = 'kasugai-sp_b2l-league'; // DB Name
+$username = 'kasugai-sp_b2l-league'; // User
+$password = 'B2L_db2025secure'; // Password
 
 try {
-    $pdo = new PDO(
-        "mysql:host={$db_host};dbname={$db_name};charset=utf8mb4",
-        $db_user,
-        $db_pass,
-        [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES => false,
-        ]
-    );
+    // PDO接続
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    die("DB接続エラー");
+    // 接続エラーの表示
+    echo '接続エラー: ' . $e->getMessage();
+    exit; // エラーが発生した場合は処理を終了
 }
 
 // ============================================================
