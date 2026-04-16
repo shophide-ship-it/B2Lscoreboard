@@ -1,10 +1,10 @@
 <?php
-// エラーメッセージを表示する設定
+// エラーメッセージ表示設定
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// データベース接続の設定
+// データベース接続設定
 try {
     $pdo = new PDO('mysql:host=mysql3114.db.sakura.ne.jp;dbname=kasugai-sp_b2l-league;charset=utf8', 'kasugai-sp_b2l-league', 'B2L_db2025secure');
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -21,15 +21,26 @@ $filter = $_GET['filter'] ?? 'pending'; // フィルタ用
 // 管理者ユーザーの判定
 $adminUser = $_SERVER['PHP_AUTH_USER'] ?? 'ゲスト';
 
-// 統計情報やDBクエリの処理部分
+// 統計情報の取得
 try {
-    $stats = $pdo->query("SELECT ...")->fetch(); // 必要なSQL
+    $stats = $pdo->query("SELECT 
+                              SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending_count, 
+                              SUM(CASE WHEN status = 'approved' THEN 1 ELSE 0 END) as approved_count, 
+                              SUM(CASE WHEN status = 'rejected' THEN 1 ELSE 0 END) as rejected_count, 
+                              COUNT(*) as total_count 
+                          FROM team_registrations")->fetch();
+
+    // 統計情報を表示
+    echo "保留中: " . htmlspecialchars($stats['pending_count']);
+    echo "承認済: " . htmlspecialchars($stats['approved_count']);
+    echo "却下: " . htmlspecialchars($stats['rejected_count']);
+    echo "総登録数: " . htmlspecialchars($stats['total_count']);
 } catch (Exception $e) {
     echo 'エラー発生: ' . htmlspecialchars($e->getMessage());
     exit; // スクリプトを終了
 }
-// 統計情報の表示部分やDB取得部分でも同様に初期化を行う
 
+// 他の処理を続ける
 try {
     // 統計情報の取得
     $stats = $pdo->query("SELECT SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending_count,
