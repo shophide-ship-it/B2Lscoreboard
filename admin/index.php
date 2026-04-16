@@ -1,25 +1,29 @@
 <?php
-// エラーメッセージを表示する設定
+// エラーメッセージ表示設定
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// データベース接続の設定
-try {
-    $pdo = new PDO('mysql:host=mysql3114.db.sakura.ne.jp;dbname=kasugai-sp_b2l-league;charset=utf8', 'kasugai-sp_b2l-league', 'B2L_db2025secure');
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    
-    echo "データベース接続成功"; // 接続成功のメッセージ
-} catch (PDOException $e) {
-    // 接続失敗のエラーメッセージ
-    echo 'データベース接続エラー: ' . htmlspecialchars($e->getMessage());
-    exit; // スクリプトを終了
-} catch (Exception $e) {
-    // その他のエラーの処理
-    echo 'エラーが発生しました: ' . htmlspecialchars($e->getMessage());
-    exit; // スクリプトを終了
+// データベース接続（省略）
+
+// 初期化
+$flash = ['type' => '', 'message' => ''];
+$filter = $_GET['filter'] ?? 'pending'; // フィルタ用
+
+// 管理者の判定
+$adminUser = $_SERVER['PHP_AUTH_USER'] ?? 'ゲスト';
+
+// 他の処理（省略）
+
+// エラーメッセージを表示する箇所でnullチェック
+if (isset($flash['message'])) {
+    echo htmlspecialchars($flash['message']);
 }
-// データ取得
+
+// 他のコード（省略）
+
+// 統計情報の表示部分やDB取得部分でも同様に初期化を行う
+
 try {
     // 統計情報の取得
     $stats = $pdo->query("SELECT SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending_count,
