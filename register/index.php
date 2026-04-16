@@ -7,7 +7,7 @@ ini_set('display_errors', '1');
 $db_host = 'mysql80.kasugai-sp.sakura.ne.jp';
 $db_name = 'kasugai-sp_b2l';
 $db_user = 'kasugai-sp';
-$db_pass = 'Basketball2025';
+$db_pass = 'X_MJJk5CfDwv4nf';
 
 try {
     $pdo = new PDO(
