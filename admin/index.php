@@ -1,49 +1,48 @@
 <?php
-// /b2l/admin/index.php
-// B2L管理画面 - チーム登録承認・却下システム
-// 完全版 - 2025年6月
-
-error_reporting(E_ALL);
-ini_set('display_errors', '0');
-ini_set('log_errors', '1');
-
-// ============================================================
-// Basic認証
-// ============================================================
-$valid_user = 'b2ladmin';
-$valid_pass = 'X_MJJk5CfDwv4nf';
-
-if (!isset($_SERVER['PHP_AUTH_USER']) ||
-    $_SERVER['PHP_AUTH_USER'] !== $valid_user ||
-    $_SERVER['PHP_AUTH_PW'] !== $valid_pass) {
-    header('WWW-Authenticate: Basic realm="B2L Admin"');
-    header('HTTP/1.0 401 Unauthorized');
-    die('認証が必要です。');
-}
-
-<?php
-// エラーメッセージ表示の設定
+// エラー表示を有効化
 ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 // データベース接続情報
-$host = 'mysql3114.db.sakura.ne.jp'; // Host
-$dbname = 'kasugai-sp_b2l-league'; // DB Name
-$username = 'kasugai-sp_b2l-league'; // User
-$password = 'B2L_db2025secure'; // Password
+$host = 'mysql3114.db.sakura.ne.jp';
+$db = 'kasugai-sp_b2l-league';
+$user = 'kasugai-sp_b2l-league';
+$password = 'B2L_db2025secure';
 
 try {
-    // PDO接続
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    // 接続エラーの表示
-    echo '接続エラー: ' . $e->getMessage();
-    exit; // エラーが発生した場合は処理を終了
-    ini_set('display_errors', 1);
-　　 error_reporting(E_ALL);
+    // PDO接続の設定
+    $dsn = "mysql:host=$host;dbname=$db;charset=utf8mb4";
+    $options = [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES => false,
+    ];
 
+    // データベースに接続
+    $pdo = new PDO($dsn, $user, $password, $options);
+} catch (PDOException $e) {
+    // エラーが発生した場合にはメッセージを表示
+    echo 'Connection failed: ' . $e->getMessage();
+    exit; // スクリプトを終了
 }
+
+// ここに他の処理を追加
+?>
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>管理パネル</h1>
+    <!-- コンテンツここに追加 -->
+</body>
+</html>
+
 
 // ============================================================
 // ヘルパー関数
