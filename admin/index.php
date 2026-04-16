@@ -1,6 +1,11 @@
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+try {
+    // データベース接続設定をここに
+    // ...
+    echo "データベース接続成功"; // 成功メッセージ
+} catch (PDOException $e) {
+    echo 'Connection failed: ' . $e->getMessage();
+    exit; // スクリプトを終了
+}
 
 <?php
 // POST処理（承認・却下）
