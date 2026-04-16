@@ -1,21 +1,24 @@
+<?php
+// エラーメッセージを表示する設定
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// データベース接続の設定
+try {
+    $pdo = new PDO('mysql:host=mysql3114.db.sakura.ne.jp;dbname=kasugai-sp_b2l-league;charset=utf8', 'kasugai-sp_b2l-league', 'B2L_db2025secure');
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
+    echo "データベース接続成功"; // 接続成功のメッセージ
+} catch (PDOException $e) {
+    // 接続失敗のエラーメッセージ
+    echo 'データベース接続エラー: ' . htmlspecialchars($e->getMessage());
+    exit; // スクリプトを終了
 } catch (Exception $e) {
+    // その他のエラーの処理
     echo 'エラーが発生しました: ' . htmlspecialchars($e->getMessage());
     exit; // スクリプトを終了
 }
-
-<?php
-// POST処理（承認・却下）
-$flash = ['type' => '', 'message' => ''];
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // ここに承認・却下処理が続きます...
-}
-
-// 変数の初期化
-$flash = $flash ?? ['type' => '', 'message' => ''];
-$stats = $stats ?? ['pending_count' => 0, 'approved_count' => 0, 'rejected_count' => 0, 'total_count' => 0];
-$totalPlayers = $totalPlayers ?? 0;
-$filter = $_GET['filter'] ?? 'pending';
-
 // データ取得
 try {
     // 統計情報の取得
