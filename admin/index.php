@@ -1,9 +1,5 @@
-try {
-    // データベース接続設定をここに
-    // ...
-    echo "データベース接続成功"; // 成功メッセージ
-} catch (PDOException $e) {
-    echo 'Connection failed: ' . $e->getMessage();
+} catch (Exception $e) {
+    echo 'エラーが発生しました: ' . htmlspecialchars($e->getMessage());
     exit; // スクリプトを終了
 }
 
