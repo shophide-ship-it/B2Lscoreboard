@@ -1,8 +1,8 @@
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 <?php
-// 省略された初期設定コード...
-
-// エラーハンドリング
-
 // POST処理（承認・却下）
 $flash = ['type' => '', 'message' => ''];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
