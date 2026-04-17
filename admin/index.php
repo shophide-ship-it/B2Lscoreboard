@@ -1,3 +1,5 @@
+echo "デバッグ: 統計情報を取得中... ";
+
 try {
     $pdo = new PDO('mysql:host=mysql3114.db.sakura.ne.jp;dbname=kasugai-sp_b2l-league;charset=utf8', 'kasugai-sp_b2l-league', 'B2L_db2025secure');
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
