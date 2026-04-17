@@ -1,28 +1,32 @@
-echo "デバッグ: 統計情報を取得中... ";
+<?php
+// DB接続やその他の初期設定
 
-try {
-    $pdo = new PDO('mysql:host=mysql3114.db.sakura.ne.jp;dbname=kasugai-sp_b2l-league;charset=utf8', 'kasugai-sp_b2l-league', 'B2L_db2025secure');
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    echo 'データベース接続エラー: ' . htmlspecialchars($e->getMessage());
-    exit; // スクリプトを終了
-}
-// 他の処理を続ける
-try {
-    // 統計情報の取得
-    $stats = $pdo->query("SELECT SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending_count,
-                                   SUM(CASE WHEN status = 'approved' THEN 1 ELSE 0 END) as approved_count,
-                                   SUM(CASE WHEN status = 'rejected' THEN 1 ELSE 0 END) as rejected_count,
-                                   COUNT(*) as total_count 
-                           FROM team_registrations")->fetch(PDO::FETCH_ASSOC);
-    $totalPlayers = $pdo->query("SELECT COUNT(*) FROM player_registrations")->fetchColumn();
-    // 後続の処理...
-} catch (Exception $e) {
-    // エラーハンドリング
-    echo 'エラーが発生しました: ' . htmlspecialchars($e->getMessage());
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'approve') {
+    $team_registration_id = $_POST['team_registration_id'];
+    
+    // 承認処理
+    $pdo->beginTransaction();
+    try {
+        // チームを承認
+        $updateStatusSql = "UPDATE team_registrations SET status = 'approved' WHERE id = :id";
+        $stmt = $pdo->prepare($updateStatusSql);
+        $stmt->execute([':id' => $team_registration_id]);
+
+        // チームデータをteamsテーブルに移行する INSERT文をここに追加
+
+        // LINE通知を送信 (必要に応じて)
+
+        // コミット
+        $pdo->commit();
+        echo "チームが承認されました。";
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        echo "エラー: " . $e->getMessage();
+    }
 }
 
-// 表示部分
+// 残りのコード (ダッシュボード表示など)
+?>
 
 // 管理者情報
 $adminUser = htmlspecialchars($_SERVER['PHP_AUTH_USER'] ?? 'ゲスト'); // デフォルトは「ゲスト」
