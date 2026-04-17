@@ -1,8 +1,13 @@
 <?php
-// POSTリクエストの処理
+session_start();
+if (!isset($_SESSION['user_logged_in'])) {
+    header('Location: /b2l/admin/index.php');
+    exit();
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors = [];
-
+    
     // バリデーション
     if (empty($_POST['name'])) {
         $errors[] = '選手名は必須です。';
@@ -13,25 +18,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // エラーチェック
     if (empty($errors)) {
-        // データをAPIへ送信 (例: cURLを使うことが一般的です)
+        // データをAPIへ送信
         header('Location: /b2l/api/register.php');
         exit();
     } else {
-        // エラーメッセージを表示
         foreach ($errors as $error) {
-            echo "<p style='color: red;'>$error</p>";
+            echo "<p>$error</p>"; // エラーメッセージを表示
         }
     }
 }
 ?>
 
-<!-- フォーム -->
-<form action="/b2l/register/index.php" method="post">
-    <label for="name">選手名:</label>
-    <input type="text" name="name" id="name" required>
-    
-    <label for="age">年齢:</label>
-    <input type="number" name="age" id="age" required min="10">
-
-    <input type="submit" value="登録">
-</form>
+<!-- フォームが続く -->
