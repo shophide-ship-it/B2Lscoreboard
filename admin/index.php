@@ -1,32 +1,25 @@
 <?php
-// DB接続やその他の初期設定
+// Basic認証
+$adminUser = htmlspecialchars($_SERVER['PHP_AUTH_USER'] ?? 'ゲスト'); 
+$adminPass = htmlspecialchars($_SERVER['PHP_AUTH_PW'] ?? '');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'approve') {
-    $team_registration_id = $_POST['team_registration_id'];
-    
-    // 承認処理
-    $pdo->beginTransaction();
-    try {
-        // チームを承認
-        $updateStatusSql = "UPDATE team_registrations SET status = 'approved' WHERE id = :id";
-        $stmt = $pdo->prepare($updateStatusSql);
-        $stmt->execute([':id' => $team_registration_id]);
-
-        // チームデータをteamsテーブルに移行する INSERT文をここに追加
-
-        // LINE通知を送信 (必要に応じて)
-
-        // コミット
-        $pdo->commit();
-        echo "チームが承認されました。";
-    } catch (Exception $e) {
-        $pdo->rollBack();
-        echo "エラー: " . $e->getMessage();
-    }
+// 管理者情報チェック
+if ($adminUser !== 'b2ladmin' || $adminPass !== 'X_MJJk5CfDwv4nf') {
+    header('WWW-Authenticate: Basic realm="B2L管理画面"');
+    header('HTTP/1.0 401 Unauthorized');
+    echo '認証情報が無効です。';
+    exit;
 }
 
-// 残りのコード (ダッシュボード表示など)
-?>
+// 管理者情報が正しい場合
+echo "
+管理パネル
+";
+echo "
+管理者: {$adminUser}
+";
+
+// データベース接続などの他の処理を続ける...
 
 // 管理者情報
 $adminUser = htmlspecialchars($_SERVER['PHP_AUTH_USER'] ?? 'ゲスト'); // デフォルトは「ゲスト」
