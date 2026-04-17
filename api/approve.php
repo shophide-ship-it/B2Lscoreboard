@@ -1,8 +1,9 @@
 <?php
 // /b2l/api/approve.php
 require_once('../db/Database.php');
+require_once('../line_push.php');  // LINE通知用のファイルを読み込み
 
-// 認証チェック（例）
+// 認証チェック
 session_start();
 if (!isset($_SESSION['user_id'])) {
     header('HTTP/1.1 401 Unauthorized');
@@ -27,25 +28,34 @@ try {
     // トランザクション開始
     $conn->beginTransaction();
 
-    // 申請を承認（statusを更新）
+    // 申請を承認
     $stmt = $conn->prepare("UPDATE player_registrations SET status = 'approved' WHERE id = ?");
     $stmt->execute([$registrationId]);
 
-    // 承認された選手をplayersテーブルに追加
+    // players テーブルに追加
     $stmt = $conn->prepare("
         INSERT INTO players (name, age) 
         SELECT name, age FROM player_registrations WHERE id = ? 
     ");
     $stmt->execute([$registrationId]);
 
+    // LINE通知の送信
+    // 承認された選手の情報を取得
+    $stmt = $conn->prepare("SELECT name, age FROM player_registrations WHERE id = ?");
+    $stmt->execute([$registrationId]);
+    $player = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($player) {
+        $message = "{$player['name']}（{$player['age']}歳）が承認されました。";
+        line_push($message); // LINE通知を送信
+    }
+
     // トランザクションをコミット
     $conn->commit();
-
-    // レスポンスの送信
     echo json_encode(['message' => '選手登録が承認されました。']);
     
 } catch (Exception $e) {
-    // エラーが発生した場合はロールバック
+    // ロールバック
     $conn->rollBack();
     header('HTTP/1.1 500 Internal Server Error');
     echo json_encode(['message' => 'エラーが発生しました。']);
