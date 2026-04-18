@@ -1,27 +1,31 @@
-display_errors = On
-display_startup_errors = On
-error_reporting = E_ALL
-<?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-?>
-<?php
-// Basic Authentication
-$validUsername = 'b2ladmin';
-$validPassword = 'X_MJJk5CfDwv4nf';
-
-// 認証用のヘッダーが送信されたか確認
-if (!isset($_SERVER['PHP_AUTH_USER'])) {
-    header('WWW-Authenticate: Basic realm="Restricted Area"');
-    header('HTTP/1.0 401 Unauthorized');
-    echo 'このページにアクセスするには認証が必要です。';
-    exit;
-} else {
-    // ユーザー名とパスワードの確認
-    if ($_SERVER['PHP_AUTH_USER'] !== $validUsername || $_SERVER['PHP_AUTH_PW'] !== $validPassword) {
-        header('HTTP/1.0 403 Forbidden');
-        echo '無効な資格情報です。';
-        exit;
-    }
-}
-?>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>バスケットボールリーグ管理</title>
+    <link rel="stylesheet" href="style.css"> <!-- スタイルシート -->
+</head>
+<body>
+    <h1>バスケットボールリーグ管理</h1>
+    <h2>チーム一覧</h2>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>チーム名</th>
+            <th>部</th>
+        </tr>
+        <?php
+        // チーム情報をDBから取得
+        include 'db.php';
+        $stmt = $pdo->query("SELECT * FROM teams");
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            echo "<tr>
+                <td>{$row['id']}</td>
+                <td>{$row['name']}</td>
+                <td>{$row['division']}</td>
+            </tr>";
+        }
+        ?>
+    </table>
+</body>
+</html>
