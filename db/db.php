@@ -1,25 +1,17 @@
 <?php
-// 1. 設定情報の定義
-$host = 'mysql3114.db.sakura.ne.jp';
-$dbname = 'kasugai-sp_b2l-league';
-$username = 'kasugai-sp_b2l-league';
-$password = 'B2L_db2025secure';
-
-// 2. データベースに接続する（この処理が終わると $pdo が使えるようになります）
-<?php
 // db.php
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    // 接続に失敗した場合はエラーを表示して止める
-    die("Could not connect to the database {$dbname} :" . $e->getMessage());
-}
-echo "データベースに接続成功"; // 追加
+    $host = 'mysql3114.db.sakura.ne.jp'; // データベースホスト
+    $dbname = 'kasugai-sp_b2l-league'; // データベース名
+    $username = 'kasugai-sp_b2l-league'; // ユーザー名
+    $password = 'B2L_db2025secure'; // パスワード
+
+    // PDOを使用してデータベースに接続
+    $conn = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    echo "データベースに接続成功"; // 接続に成功した場合のメッセージ
 } catch (PDOException $e) {
     echo "接続失敗: " . $e->getMessage();
-    exit();
+    exit(); // 接続失敗時は処理を終了
 }
 ?>
-// 注意：ここでは SELECT 文（データの取得）は書かなくてOKです。
-// データの取得は、表示を行う index.php 側でやるのが一般的です。
