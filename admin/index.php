@@ -15,9 +15,11 @@
             <th>部</th>
         </tr>
         <?php
-        // チーム情報をDBから取得
-        include 'db.php';
-        $stmt = $pdo->query("SELECT * FROM teams");
+// チーム情報をDBから取得
+include 'db.php';
+
+/** @var PDO $pdo */ // ←この1行を追加してください
+$stmt = $pdo->query("SELECT * FROM teams");
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             echo "<tr>
                 <td>{$row['id']}</td>
