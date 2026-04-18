@@ -1,16 +1,9 @@
-<?php
-include 'db.php';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $player_id = $_POST['player_id'];
-    $game_date = $_POST['game_date'];
-    // 他のスタッツフィールドも取得
-
-    $stmt = $pdo->prepare("INSERT INTO stats (player_id, game_date, pts, reb, ast) VALUES (?, ?, ?, ?, ?)");
-    $stmt->execute([$player_id, $game_date, $pts, $reb, $ast]);
-
-    // ランキング更新ロジックなども追加
-
-    header('Location: index.php');
-    exit;
-}
+<!-- input_stats.php の一部 -->
+<form action="submit_stats.php" method="post">
+    <label for="player_id">選手ID:</label>
+    <input type="number" name="player_id" required><br>
+    <label for="game_date">試合日:</label>
+    <input type="date" name="game_date" required><br>
+    <!-- 他の項目も追加 -->
+    <input type="submit" value="スタッツを送信">
+</form>

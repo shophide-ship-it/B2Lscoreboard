@@ -8,7 +8,6 @@ if (!(isset($_SESSION['authenticated']) && $_SESSION['authenticated'])) {
 
 include 'db.php';
 
-// DBからチームデータを取得
 $stmt = $pdo->query("SELECT * FROM teams");
 $teams = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -31,7 +30,8 @@ $teams = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <li><?php echo htmlspecialchars($team['name']); ?> (<?php echo htmlspecialchars($team['division']); ?>)</li>
             <?php endforeach; ?>
         </ul>
-        <!-- スタッツ登録フォームなど追加 -->
+        <a href="input_stats.php">スタッツ入力</a> <!-- リンクを修正 -->
+        <!-- 他の機能も追加 -->
     </main>
 </body>
 </html>
