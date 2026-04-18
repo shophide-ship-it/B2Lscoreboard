@@ -1,17 +1,20 @@
 <?php
-// db.php
 try {
-    $host = 'mysql3114.db.sakura.ne.jp'; // データベースホスト
-    $dbname = 'kasugai-sp_b2l-league'; // データベース名
-    $username = 'kasugai-sp_b2l-league'; // ユーザー名
-    $password = 'B2L_db2025secure'; // パスワード
+    $host = 'mysql3114.db.sakura.ne.jp';
+    $dbname = 'kasugai-sp_b2l-league';
+    $username = 'kasugai-sp_b2l-league';
+    $password = 'B2L_db2025secure';
 
-    // PDOを使用してデータベースに接続
     $conn = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    echo "データベースに接続成功"; // 接続に成功した場合のメッセージ
+
+    // クエリの例
+    $stmt = $conn->query("SELECT * FROM your_table");
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $num_rows = count($results); // 行数を取得
+   
+    echo "$num_rows 行のデータを取得しました。";
 } catch (PDOException $e) {
     echo "接続失敗: " . $e->getMessage();
-    exit(); // 接続失敗時は処理を終了
 }
 ?>
