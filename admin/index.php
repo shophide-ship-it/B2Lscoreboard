@@ -5,7 +5,7 @@ error_reporting(E_ALL);
 ?>
 
 <?php
-include 'db.php'; // データベース接続ファイルをインクルード
+include '../db/db.php';
 
 // チーム情報を取得するクエリ
 $query = "SELECT id, name, division FROM teams";
