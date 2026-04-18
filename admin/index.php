@@ -1,8 +1,10 @@
+display_errors = On
+display_startup_errors = On
+error_reporting = E_ALL
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 ?>
-
 <?php
 // Basic Authentication
 $validUsername = 'b2ladmin';
