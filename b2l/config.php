@@ -1,10 +1,17 @@
 <?php
-// データベース設定
-define('DB_HOST', 'mysql3114.db.sakura.ne.jp');
-define('DB_NAME', 'kasugai-sp_b2l-league');
-define('DB_USER', 'kasugai-sp_b2l-league');
-define('DB_PASS', 'B2L_db2025secure');
-define('DB_CHARSET', 'utf8mb4');
+// config.php
+
+$host = 'mysql3114.db.sakura.ne.jp';
+$dbname = 'kasugai-sp_b2l-league';
+$user = 'kasugai-sp_b2l-league';
+$password = 'B2L_db2025secure';
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    echo "Database connection failed: " . $e->getMessage();
+}
 
 // サイト設定
 define('SITE_NAME', 'B2L LEAGUE');
