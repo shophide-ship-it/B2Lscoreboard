@@ -1,4 +1,17 @@
 <?php
+// install.php
+
+require 'config.php';
+
+$username = 'b2ladmin';
+$password = password_hash('X_MJJk5CfDwv4nf', PASSWORD_DEFAULT);
+
+$stmt = $pdo->prepare("INSERT INTO admins (username, password) VALUES (:username, :password)");
+$stmt->execute(['username' => $username, 'password' => $password]);
+
+echo "Admin user created successfully.";
+
+<?php
 require_once __DIR__ . '/config.php';
 
 $pdo = getDB();
