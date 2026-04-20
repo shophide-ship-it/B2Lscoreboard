@@ -1,17 +1,10 @@
 <?php
-// config.php
-
-$host = 'mysql3114.db.sakura.ne.jp';
-$dbname = 'kasugai-sp_b2l-league';
-$user = 'kasugai-sp_b2l-league';
-$password = 'B2L_db2025secure';
-
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    echo "Database connection failed: " . $e->getMessage();
-}
+// データベース設定
+define('DB_HOST', 'mysql3114.db.sakura.ne.jp');
+define('DB_NAME', 'kasugai-sp_b2l-league');
+define('DB_USER', 'kasugai-sp');
+define('DB_PASS', 'X_MJJk5CfDwv4nf');
+define('DB_CHARSET', 'utf8mb4');
 
 // サイト設定
 define('SITE_NAME', 'B2L LEAGUE');
@@ -54,11 +47,6 @@ function getPositionName($pos) {
         'C' => 'センター'
     ];
     return $positions[$pos] ?? $pos;
-}
-
-// ベースURL取得
-function url($path = '') {
-    return BASE_PATH . '/' . ltrim($path, '/');
 }
 
 // セッション開始
