@@ -1,3 +1,15 @@
+<?php
+// index.php
+
+session_start();
+
+if (!isset($_SESSION['admin_logged_in'])) {
+    header('Location: auth.php');
+    exit();
+}
+
+// 管理画面の内容
+
 <!DOCTYPE html>
 <html>
 <head>
