@@ -2,7 +2,7 @@
 // データベース設定
 define('DB_HOST', 'mysql3114.db.sakura.ne.jp');
 define('DB_NAME', 'kasugai-sp_b2l-league');
-define('DB_USER', 'kasugai-sp');
+define('DB_USER', 'kasugai-sp_b2l-league');
 define('DB_PASS', 'X_MJJk5CfDwv4nf');
 define('DB_CHARSET', 'utf8mb4');
 
