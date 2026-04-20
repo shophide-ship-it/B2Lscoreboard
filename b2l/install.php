@@ -1,17 +1,4 @@
 <?php
-// install.php
-
-require 'config.php';
-
-$username = 'b2ladmin';
-$password = password_hash('X_MJJk5CfDwv4nf', PASSWORD_DEFAULT);
-
-$stmt = $pdo->prepare("INSERT INTO admins (username, password) VALUES (:username, :password)");
-$stmt->execute(['username' => $username, 'password' => $password]);
-
-echo "Admin user created successfully.";
-
-<?php
 require_once __DIR__ . '/config.php';
 
 $pdo = getDB();
@@ -122,35 +109,35 @@ try {
     $stmt = $pdo->query("SELECT COUNT(*) FROM teams");
     if ($stmt->fetchColumn() == 0) {
         $teams = [
-            ['スパークス', 'SPK', 1, '#C8102E'],
-            ['サンダーズ', 'THD', 1, '#007AC1'],
-            ['イーグルス', 'EGL', 1, '#1D428A'],
-            ['ブレイズ', 'BLZ', 1, '#E03A3E'],
-            ['ウォリアーズ', 'WAR', 1, '#FFC72C'],
-            ['パンサーズ', 'PAN', 1, '#552583'],
-            ['ファルコンズ', 'FAL', 1, '#006BB6'],
-            ['ドラゴンズ', 'DRG', 1, '#CE1141'],
-            ['ホーネッツ', 'HOR', 2, '#1D1160'],
-            ['グリズリーズ', 'GRZ', 2, '#5D76A9'],
-            ['ブルズ', 'BUL', 2, '#CE1141'],
-            ['ラプターズ', 'RAP', 2, '#CE1141'],
-            ['ウルブズ', 'WLV', 2, '#0C2340'],
-            ['ホークス', 'HWK', 2, '#E03A3E'],
-            ['ナイツ', 'KNT', 2, '#006BB6'],
-            ['タイガース', 'TGR', 2, '#FF6900'],
-            ['レオパーズ', 'LEO', 3, '#98002E'],
-            ['コブラズ', 'COB', 3, '#00471B'],
-            ['シャークス', 'SHK', 3, '#0077C0'],
-            ['フェニックス', 'PHX', 3, '#E56020'],
-            ['ウィザーズ', 'WIZ', 3, '#002B5C'],
-            ['セルティックス', 'CEL', 3, '#007A33'],
-            ['キングス', 'KNG', 3, '#5A2D81'],
-            ['ロケッツ', 'RKT', 3, '#CE1141'],
+            ['name' => 'スパークス', 'short_name' => 'SPK', 'division' => 1, 'logo_color' => '#C8102E'],
+            ['name' => 'サンダーズ', 'short_name' => 'THD', 'division' => 1, 'logo_color' => '#007AC1'],
+            ['name' => 'イーグルス', 'short_name' => 'EGL', 'division' => 1, 'logo_color' => '#1D428A'],
+            ['name' => 'ブレイズ', 'short_name' => 'BLZ', 'division' => 1, 'logo_color' => '#E03A3E'],
+            ['name' => 'ウォリアーズ', 'short_name' => 'WAR', 'division' => 1, 'logo_color' => '#FFC72C'],
+            ['name' => 'パンサーズ', 'short_name' => 'PAN', 'division' => 1, 'logo_color' => '#552583'],
+            ['name' => 'ファルコンズ', 'short_name' => 'FAL', 'division' => 1, 'logo_color' => '#006BB6'],
+            ['name' => 'ドラゴンズ', 'short_name' => 'DRG', 'division' => 1, 'logo_color' => '#CE1141'],
+            ['name' => 'ホーネッツ', 'short_name' => 'HOR', 'division' => 2, 'logo_color' => '#1D1160'],
+            ['name' => 'グリズリーズ', 'short_name' => 'GRZ', 'division' => 2, 'logo_color' => '#5D76A9'],
+            ['name' => 'ブルズ', 'short_name' => 'BUL', 'division' => 2, 'logo_color' => '#CE1141'],
+            ['name' => 'ラプターズ', 'short_name' => 'RAP', 'division' => 2, 'logo_color' => '#CE1141'],
+            ['name' => 'ウルブズ', 'short_name' => 'WLV', 'division' => 2, 'logo_color' => '#0C2340'],
+            ['name' => 'ホークス', 'short_name' => 'HWK', 'division' => 2, 'logo_color' => '#E03A3E'],
+            ['name' => 'ナイツ', 'short_name' => 'KNT', 'division' => 2, 'logo_color' => '#006BB6'],
+            ['name' => 'タイガース', 'short_name' => 'TGR', 'division' => 2, 'logo_color' => '#FF6900'],
+            ['name' => 'レオパーズ', 'short_name' => 'LEO', 'division' => 3, 'logo_color' => '#98002E'],
+            ['name' => 'コブラズ', 'short_name' => 'COB', 'division' => 3, 'logo_color' => '#00471B'],
+            ['name' => 'シャークス', 'short_name' => 'SHK', 'division' => 3, 'logo_color' => '#0077C0'],
+            ['name' => 'フェニックス', 'short_name' => 'PHX', 'division' => 3, 'logo_color' => '#E56020'],
+            ['name' => 'ウィザーズ', 'short_name' => 'WIZ', 'division' => 3, 'logo_color' => '#002B5C'],
+            ['name' => 'セルティックス', 'short_name' => 'CEL', 'division' => 3, 'logo_color' => '#007A33'],
+            ['name' => 'キングス', 'short_name' => 'KNG', 'division' => 3, 'logo_color' => '#5A2D81'],
+            ['name' => 'ロケッツ', 'short_name' => 'RKT', 'division' => 3, 'logo_color' => '#CE1141'],
         ];
 
         $stmt = $pdo->prepare("INSERT INTO teams (name, short_name, division, logo_color) VALUES (?, ?, ?, ?)");
-        foreach ($teams as $t) {
-            $stmt->execute($t);
+        foreach ($teams as $team) {
+            $stmt->execute([$team['name'], $team['short_name'], $team['division'], $team['logo_color']]);
         }
         $messages[] = ['success', 'サンプルチーム24チームを挿入しました。'];
 
@@ -187,9 +174,8 @@ try {
     <?php foreach ($messages as $msg): ?>
         <div class="msg <?= $msg[0] ?>"><?= $msg[1] ?></div>
     <?php endforeach; ?>
-    <p style="margin-top:20px;"><a href="<?= url('index.php') ?>">→ サイトトップへ</a></p>
-    <p><a href="<?= url('admin/index.php') ?>">→ 管理ページへ</a></p>
+    <p style="margin-top:20px;"><a href="<?= BASE_PATH ?>/index.php">→ サイトトップへ</a></p>
+    <p><a href="<?= BASE_PATH ?>/admin/index.php">→ 管理ページへ</a></p>
 </div>
 </body>
 </html>
-
