@@ -1,3 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Login</title>
+</head>
+<body>
+    <form method="POST" action="auth.php">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        
+        <input type="submit" value="Login">
+    </form>
+    <?php if (isset($error)) { echo "<p>$error</p>"; } ?>
+</body>
+</html>
+
 <?php
 require_once __DIR__ . '/auth.php';
 handleLogout();
