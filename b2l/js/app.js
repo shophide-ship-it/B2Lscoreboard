@@ -1,62 +1,73 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Mobile Menu
-    const mobileBtn = document.querySelector('.mobile-menu-btn');
+    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
     const mainNav = document.querySelector('.main-nav');
-    if (mobileBtn && mainNav) {
-        mobileBtn.addEventListener('click', () => mainNav.classList.toggle('open'));
+    if (mobileMenuBtn && mainNav) {
+        mobileMenuBtn.addEventListener('click', () => {
+            mainNav.classList.toggle('open');
+        });
     }
+    initDivisionTabs();
+    initAdminFeatures();
+});
 
-    // Division Tabs
-    document.querySelectorAll('.division-tab[data-division]').forEach(tab => {
+function initDivisionTabs() {
+    const tabs = document.querySelectorAll('.division-tab');
+    tabs.forEach(tab => {
         tab.addEventListener('click', function() {
             const group = this.closest('.division-tabs');
             const target = this.dataset.division;
             const container = this.closest('.division-section') || this.closest('section') || document.body;
             group.querySelectorAll('.division-tab').forEach(t => t.classList.remove('active'));
             this.classList.add('active');
-            container.querySelectorAll('.division-content').forEach(c => {
-                c.style.display = c.dataset.division === target ? '' : 'none';
+            container.querySelectorAll('.division-content').forEach(content => {
+                content.style.display = content.dataset.division === target ? '' : 'none';
             });
         });
     });
-
-    // Delete confirmation
-    document.querySelectorAll('.btn-delete').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            if (!confirm('本当に削除しますか？')) e.preventDefault();
-        });
-    });
-
-    // Modal close
-    document.querySelectorAll('.modal-close').forEach(el => {
-        el.addEventListener('click', function() {
-            this.closest('.modal-overlay').classList.remove('active');
-        });
-    });
-    document.querySelectorAll('.modal-overlay').forEach(el => {
-        el.addEventListener('click', function(e) {
-            if (e.target === this) this.classList.remove('active');
-        });
-    });
-
-    // Stats auto-calc
-    const statsForm = document.getElementById('stats-form');
-    if (statsForm) {
-        ['fgm', 'fga', 'three_pm', 'three_pa', 'ftm', 'fta', 'oreb', 'dreb'].forEach(name => {
-            const el = statsForm.querySelector(`[name="${name}"]`);
-            if (el) el.addEventListener('input', calcStats);
-        });
-    }
-});
-
-function calcStats() {
-    const f = document.getElementById('stats-form');
-    if (!f) return;
-    const v = n => parseInt(f.querySelector(`[name="${n}"]`)?.value) || 0;
-    const rebF = f.querySelector('[name="reb"]');
-    const ptsF = f.querySelector('[name="pts"]');
-    if (rebF) rebF.value = v('oreb') + v('dreb');
-    if (ptsF) ptsF.value = (v('fgm') * 2) + v('three_pm') + v('ftm');
 }
 
+function initAdminFeatures() {
+    document.querySelectorAll('.btn-delete').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            if (!confirm('本当に削除しますか？この操作は取り消せません。')) {
+                e.preventDefault();
+            }
+        });
+    });
+    document.querySelectorAll('[data-modal]').forEach(trigger => {
+        trigger.addEventListener('click', function() {
+            const modal = document.getElementById(this.dataset.modal);
+            if (modal) modal.classList.add('active');
+        });
+    });
+    document.querySelectorAll('.modal-close, .modal-overlay').forEach(el => {
+        el.addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.closest('.modal-overlay').classList.remove('active');
+            }
+        });
+    });
+    const statsForm = document.getElementById('stats-form');
+    if (statsForm) {
+        const calcFields = ['fgm', 'fga', 'three_pm', 'three_pa', 'ftm', 'fta', 'oreb', 'dreb'];
+        calcFields.forEach(field => {
+            const el = statsForm.querySelector(`[name="${field}"]`);
+            if (el) el.addEventListener('input', calculateDerived);
+        });
+    }
+}
 
+function calculateDerived() {
+    const form = document.getElementById('stats-form');
+    if (!form) return;
+    const get = name => parseInt(form.querySelector(`[name="${name}"]`)?.value) || 0;
+    const oreb = get('oreb');
+    const dreb = get('dreb');
+    const rebField = form.querySelector('[name="reb"]');
+    if (rebField) rebField.value = oreb + dreb;
+    const fgm = get('fgm');
+    const three_pm = get('three_pm');
+    const ftm = get('ftm');
+    const ptsField = form.querySelector('[name="pts"]');
+    if (ptsField) ptsField.value = (fgm * 2) + three_pm + ftm;
+}
