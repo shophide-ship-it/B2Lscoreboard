@@ -22,22 +22,32 @@ for ($d = 1; $d <= 3; $d++) {
 }
 
 $scoringLeaders = $pdo->query("
-    SELECT p.name, t.short_name, t.logo_color, ROUND(AVG(ps.pts),1) as avg_val, COUNT(ps.id) as gp
-    FROM player_stats ps JOIN players p ON ps.player_id=p.id JOIN teams t ON p.team_id=t.id
-    GROUP BY ps.player_id HAVING gp>=1 ORDER BY avg_val DESC LIMIT 5
+    SELECT p.name, p.number, t.short_name, t.logo_color,
+           ROUND(AVG(ps.pts), 1) as avg_pts, COUNT(ps.id) as games_played
+    FROM player_stats ps
+    JOIN players p ON ps.player_id = p.id JOIN teams t ON p.team_id = t.id
+    GROUP BY ps.player_id HAVING games_played >= 1
+    ORDER BY avg_pts DESC LIMIT 5
 ")->fetchAll();
 
 $assistLeaders = $pdo->query("
-    SELECT p.name, t.short_name, t.logo_color, ROUND(AVG(ps.ast),1) as avg_val, COUNT(ps.id) as gp
-    FROM player_stats ps JOIN players p ON ps.player_id=p.id JOIN teams t ON p.team_id=t.id
-    GROUP BY ps.player_id HAVING gp>=1 ORDER BY avg_val DESC LIMIT 5
+    SELECT p.name, p.number, t.short_name, t.logo_color,
+           ROUND(AVG(ps.ast), 1) as avg_ast, COUNT(ps.id) as games_played
+    FROM player_stats ps
+    JOIN players p ON ps.player_id = p.id JOIN teams t ON p.team_id = t.id
+    GROUP BY ps.player_id HAVING games_played >= 1
+    ORDER BY avg_ast DESC LIMIT 5
 ")->fetchAll();
 
 $reboundLeaders = $pdo->query("
-    SELECT p.name, t.short_name, t.logo_color, ROUND(AVG(ps.reb),1) as avg_val, COUNT(ps.id) as gp
-    FROM player_stats ps JOIN players p ON ps.player_id=p.id JOIN teams t ON p.team_id=t.id
-    GROUP BY ps.player_id HAVING gp>=1 ORDER BY avg_val DESC LIMIT 5
+    SELECT p.name, p.number, t.short_name, t.logo_color,
+           ROUND(AVG(ps.reb), 1) as avg_reb, COUNT(ps.id) as games_played
+    FROM player_stats ps
+    JOIN players p ON ps.player_id = p.id JOIN teams t ON p.team_id = t.id
+    GROUP BY ps.player_id HAVING games_played >= 1
+    ORDER BY avg_reb DESC LIMIT 5
 ")->fetchAll();
+$BP = BASE_PATH;
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -45,20 +55,20 @@ $reboundLeaders = $pdo->query("
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= SITE_NAME ?> - バスケットボールリーグ</title>
-    <link rel="stylesheet" href="<?= url('css/style.css') ?>">
+    <link rel="stylesheet" href="<?= $BP ?>/css/style.css">
 </head>
 <body>
     <header class="main-header">
-        <div class="header-top"><div class="header-top-inner"><a href="<?= url('admin/') ?>">管理ページ</a></div></div>
+        <div class="header-top"><div class="header-top-inner"><a href="<?= $BP ?>/admin/index.php">管理ページ</a></div></div>
         <div class="nav-container">
-            <a href="<?= url('index.php') ?>" class="logo"><span class="logo-icon">🏀</span><span class="logo-text">B2L <span>LEAGUE</span></span></a>
+            <a href="<?= $BP ?>/index.php" class="logo"><span class="logo-icon">🏀</span><span class="logo-text">B2L <span>LEAGUE</span></span></a>
             <button class="mobile-menu-btn">☰</button>
             <nav class="main-nav">
-                <a href="<?= url('index.php') ?>" class="active">ホーム</a>
-                <a href="<?= url('schedule.php') ?>">スケジュール</a>
-                <a href="<?= url('teams.php') ?>">チーム</a>
-                <a href="<?= url('standings.php') ?>">順位表</a>
-                <a href="<?= url('leaders.php') ?>">リーダーズ</a>
+                <a href="<?= $BP ?>/index.php" class="active">ホーム</a>
+                <a href="<?= $BP ?>/schedule.php">スケジュール</a>
+                <a href="<?= $BP ?>/teams.php">チーム</a>
+                <a href="<?= $BP ?>/standings.php">順位表</a>
+                <a href="<?= $BP ?>/leaders.php">リーダーズ</a>
             </nav>
         </div>
     </header>
@@ -69,52 +79,50 @@ $reboundLeaders = $pdo->query("
     </section>
 
     <div class="container content-wrapper">
-        <!-- Recent Games -->
         <section class="mb-3">
             <div class="section-header">
                 <h2>最近の試合</h2>
-                <a href="<?= url('schedule.php') ?>" class="view-all">すべて見る →</a>
+                <a href="<?= $BP ?>/schedule.php" class="view-all">すべて見る →</a>
             </div>
             <?php if (empty($recentGames)): ?>
                 <div class="empty-state"><div class="icon">📅</div><p>まだ試合が登録されていません</p></div>
             <?php else: ?>
                 <div class="games-grid">
                     <?php foreach ($recentGames as $game): ?>
-                        <?php $fin = $game['status']==='finished'; $hw = $fin && $game['home_score']>$game['away_score']; $aw = $fin && $game['away_score']>$game['home_score']; ?>
-                        <div class="game-card">
-                            <div class="game-status">
-                                <span><?= date('n/j (D)', strtotime($game['game_date'])) ?></span>
-                                <span class="status-badge status-<?= $game['status'] ?>"><?= $game['status']==='finished'?'終了':($game['status']==='live'?'LIVE':'予定') ?></span>
-                            </div>
-                            <div class="game-matchup">
-                                <div class="game-team">
-                                    <div class="team-logo-circle" style="background:<?= $game['home_color'] ?>"><?= $game['home_short'] ?></div>
-                                    <span class="team-name"><?= htmlspecialchars($game['home_name']) ?></span>
-                                </div>
-                                <div class="game-score">
-                                    <?php if ($fin || $game['status']==='live'): ?>
-                                        <span class="score <?= $hw?'winner':'loser' ?>"><?= $game['home_score'] ?></span>
-                                        <span class="vs">-</span>
-                                        <span class="score <?= $aw?'winner':'loser' ?>"><?= $game['away_score'] ?></span>
-                                    <?php else: ?>
-                                        <span class="vs"><?= $game['game_time']?date('H:i',strtotime($game['game_time'])):'VS' ?></span>
-                                    <?php endif; ?>
-                                </div>
-                                <div class="game-team">
-                                    <div class="team-logo-circle" style="background:<?= $game['away_color'] ?>"><?= $game['away_short'] ?></div>
-                                    <span class="team-name"><?= htmlspecialchars($game['away_name']) ?></span>
-                                </div>
-                            </div>
-                            <?php if ($game['venue']): ?><div class="game-info"><span>📍 <?= htmlspecialchars($game['venue']) ?></span></div><?php endif; ?>
+                    <?php $fin = $game['status']==='finished'; $hw = $fin && $game['home_score']>$game['away_score']; $aw = $fin && $game['away_score']>$game['home_score']; ?>
+                    <div class="game-card">
+                        <div class="game-status">
+                            <span><?= date('n/j (D)', strtotime($game['game_date'])) ?></span>
+                            <span class="status-badge status-<?= $game['status'] ?>"><?= $game['status']==='finished'?'終了':($game['status']==='live'?'LIVE':'予定') ?></span>
                         </div>
+                        <div class="game-matchup">
+                            <div class="game-team">
+                                <div class="team-logo-circle" style="background:<?= $game['home_color'] ?>"><?= $game['home_short'] ?></div>
+                                <span class="team-name"><?= htmlspecialchars($game['home_name']) ?></span>
+                            </div>
+                            <div class="game-score">
+                                <?php if ($fin || $game['status']==='live'): ?>
+                                    <span class="score <?= $hw?'winner':'loser' ?>"><?= $game['home_score'] ?></span>
+                                    <span class="vs">-</span>
+                                    <span class="score <?= $aw?'winner':'loser' ?>"><?= $game['away_score'] ?></span>
+                                <?php else: ?>
+                                    <span class="vs"><?= $game['game_time']?date('H:i',strtotime($game['game_time'])):'VS' ?></span>
+                                <?php endif; ?>
+                            </div>
+                            <div class="game-team">
+                                <div class="team-logo-circle" style="background:<?= $game['away_color'] ?>"><?= $game['away_short'] ?></div>
+                                <span class="team-name"><?= htmlspecialchars($game['away_name']) ?></span>
+                            </div>
+                        </div>
+                        <?php if ($game['venue']): ?><div class="game-info"><span>📍 <?= htmlspecialchars($game['venue']) ?></span></div><?php endif; ?>
+                    </div>
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>
         </section>
 
-        <!-- Standings -->
         <section class="mb-3">
-            <div class="section-header"><h2>順位表</h2><a href="<?= url('standings.php') ?>" class="view-all">すべて見る →</a></div>
+            <div class="section-header"><h2>順位表</h2><a href="<?= $BP ?>/standings.php" class="view-all">すべて見る →</a></div>
             <div class="division-section">
                 <div class="division-tabs">
                     <button class="division-tab active" data-division="1">1部</button>
@@ -127,17 +135,17 @@ $reboundLeaders = $pdo->query("
                         <table class="standings-table">
                             <thead><tr><th class="text-center">#</th><th>チーム</th><th class="text-center">勝</th><th class="text-center">敗</th><th class="text-center">勝率</th></tr></thead>
                             <tbody>
-                                <?php if (empty($standingsData[$d])): ?>
-                                    <tr><td colspan="5" class="text-center text-muted" style="padding:20px">データなし</td></tr>
-                                <?php else: foreach ($standingsData[$d] as $i => $r): ?>
-                                    <tr>
-                                        <td class="rank <?= $i<3?'top':'' ?>"><?= $i+1 ?></td>
-                                        <td><div class="team-cell"><div class="team-mini-logo" style="background:<?= $r['logo_color'] ?>"><?= $r['short_name'] ?></div><a href="<?= url('team.php?id='.$r['team_id']) ?>"><?= htmlspecialchars($r['name']) ?></a></div></td>
-                                        <td class="text-center"><?= $r['wins'] ?></td>
-                                        <td class="text-center"><?= $r['losses'] ?></td>
-                                        <td class="text-center win-pct"><?= number_format($r['win_pct'],3) ?></td>
-                                    </tr>
-                                <?php endforeach; endif; ?>
+                            <?php if (empty($standingsData[$d])): ?>
+                                <tr><td colspan="5" class="text-center text-muted" style="padding:20px">データなし</td></tr>
+                            <?php else: foreach ($standingsData[$d] as $i => $row): ?>
+                                <tr>
+                                    <td class="rank <?= $i<3?'top':'' ?>"><?= $i+1 ?></td>
+                                    <td><div class="team-cell"><div class="team-mini-logo" style="background:<?= $row['logo_color'] ?>"><?= $row['short_name'] ?></div><a href="<?= $BP ?>/team.php?id=<?= $row['team_id'] ?>"><?= htmlspecialchars($row['name']) ?></a></div></td>
+                                    <td class="text-center"><?= $row['wins'] ?></td>
+                                    <td class="text-center"><?= $row['losses'] ?></td>
+                                    <td class="text-center win-pct"><?= number_format($row['win_pct'],3) ?></td>
+                                </tr>
+                            <?php endforeach; endif; ?>
                             </tbody>
                         </table>
                     </div>
@@ -146,21 +154,16 @@ $reboundLeaders = $pdo->query("
             </div>
         </section>
 
-        <!-- Leaders -->
         <section class="mb-3">
-            <div class="section-header"><h2>スタッツリーダー</h2><a href="<?= url('leaders.php') ?>" class="view-all">すべて見る →</a></div>
+            <div class="section-header"><h2>スタッツリーダー</h2><a href="<?= $BP ?>/leaders.php" class="view-all">すべて見る →</a></div>
             <?php if (empty($scoringLeaders)&&empty($assistLeaders)&&empty($reboundLeaders)): ?>
                 <div class="empty-state"><div class="icon">📊</div><p>まだスタッツデータがありません</p></div>
             <?php else: ?>
                 <div class="leaders-grid">
-                    <?php
-                    $cats = [
-                        ['得点 (PPG)', $scoringLeaders],
-                        ['アシスト (APG)', $assistLeaders],
-                        ['リバウンド (RPG)', $reboundLeaders],
-                    ];
-                    foreach ($cats as $cat):
-                    ?>
+                <?php
+                $cats = [['得点 (PPG)', $scoringLeaders, 'avg_pts'], ['アシスト (APG)', $assistLeaders, 'avg_ast'], ['リバウンド (RPG)', $reboundLeaders, 'avg_reb']];
+                foreach ($cats as $cat):
+                ?>
                     <div class="leader-card">
                         <div class="leader-card-header"><?= $cat[0] ?></div>
                         <?php foreach ($cat[1] as $i => $l): ?>
@@ -168,11 +171,11 @@ $reboundLeaders = $pdo->query("
                             <span class="leader-rank <?= $i<3?'top-'.($i+1):'' ?>"><?= $i+1 ?></span>
                             <div class="team-mini-logo" style="background:<?= $l['logo_color'] ?>;width:32px;height:32px;font-size:9px"><?= $l['short_name'] ?></div>
                             <div class="leader-info"><div class="name"><?= htmlspecialchars($l['name']) ?></div><div class="team"><?= $l['short_name'] ?></div></div>
-                            <div class="leader-stat"><?= $l['avg_val'] ?></div>
+                            <div class="leader-stat"><?= $l[$cat[2]] ?></div>
                         </div>
                         <?php endforeach; ?>
                     </div>
-                    <?php endforeach; ?>
+                <?php endforeach; ?>
                 </div>
             <?php endif; ?>
         </section>
@@ -182,15 +185,14 @@ $reboundLeaders = $pdo->query("
         <div class="footer-content">
             <div class="footer-logo">B2L <span>LEAGUE</span></div>
             <div class="footer-links">
-                <a href="<?= url('schedule.php') ?>">スケジュール</a>
-                <a href="<?= url('teams.php') ?>">チーム</a>
-                <a href="<?= url('standings.php') ?>">順位表</a>
-                <a href="<?= url('leaders.php') ?>">リーダーズ</a>
+                <a href="<?= $BP ?>/schedule.php">スケジュール</a>
+                <a href="<?= $BP ?>/teams.php">チーム</a>
+                <a href="<?= $BP ?>/standings.php">順位表</a>
+                <a href="<?= $BP ?>/leaders.php">リーダーズ</a>
             </div>
             <div class="footer-copy">© 2024 B2L League. All rights reserved.</div>
         </div>
     </footer>
-    <script src="<?= url('js/app.js') ?>"></script>
+    <script src="<?= $BP ?>/js/app.js"></script>
 </body>
 </html>
-
