@@ -57,7 +57,7 @@ if (isLoggedIn()):
 <div class="login-wrapper"><div class="login-box">
     <div style="font-size:48px;margin-bottom:16px">🏀</div>
     <h1>B2L <span style="color:var(--nba-red)">LEAGUE</span></h1>
-    <p>管理パネルログイン</p>
+    <p></p>
     <?php if ($loginError): ?><div class="alert alert-error"><?= $loginError ?></div><?php endif; ?>
     <form method="POST">
         <input type="hidden" name="action" value="login">
