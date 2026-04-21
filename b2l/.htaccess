@@ -1,16 +1,20 @@
 RewriteEngine On
 RewriteBase /b2l/
 
+# UTF-8
 AddDefaultCharset UTF-8
 
+# PHPエラー非表示（本番用）
 php_flag display_errors Off
 php_value error_reporting 0
 
+# セキュリティヘッダ
 <IfModule mod_headers.c>
     Header set X-Content-Type-Options "nosniff"
     Header set X-Frame-Options "SAMEORIGIN"
 </IfModule>
 
+# キャッシュ
 <IfModule mod_expires.c>
     ExpiresActive On
     ExpiresByType text/css "access plus 1 week"
