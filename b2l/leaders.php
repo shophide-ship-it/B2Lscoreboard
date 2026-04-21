@@ -68,7 +68,7 @@ $isPct = ['fg'=>1,'3p'=>1,'ft'=>1];
             <?php endforeach; ?>
         </div>
     </div>
-    <footer class="main-footer"><div class="footer-content"><div class="footer-logo">B2L <span>LEAGUE</span></div><div class="footer-copy">© 2024 B2L League.</div></div></footer>
+    <footer class="main-footer"><div class="footer-content"><div class="footer-logo">B2L <span>LEAGUE</span></div><div class="footer-copy">© 2025-26 B2L League.</div></div></footer>
     <script src="<?= url('js/app.js') ?>"></script>
 </body>
 </html>
