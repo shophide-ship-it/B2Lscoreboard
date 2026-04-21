@@ -65,7 +65,7 @@ $reboundLeaders = $pdo->query("
 
     <section class="hero">
         <h1><span>B2L LEAGUE</span></h1>
-        <p>2024-25 シーズン</p>
+        <p>2025-26 シーズン</p>
     </section>
 
     <div class="container content-wrapper">
@@ -187,7 +187,7 @@ $reboundLeaders = $pdo->query("
                 <a href="<?= url('standings.php') ?>">順位表</a>
                 <a href="<?= url('leaders.php') ?>">リーダーズ</a>
             </div>
-            <div class="footer-copy">© 2024 B2L League. All rights reserved.</div>
+            <div class="footer-copy">© 2025-26 B2L League. All rights reserved.</div>
         </div>
     </footer>
     <script src="<?= url('js/app.js') ?>"></script>
