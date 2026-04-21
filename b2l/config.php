@@ -1,3 +1,6 @@
+define('ADMIN_USERNAME', 'admin');
+define('ADMIN_PASSWORD', password_hash('your_secure_password', PASSWORD_DEFAULT));
+
 <?php
 $host = 'mysql80.kasugai-sp.sakura.ne.jp';
 $dbname = 'kasugai-sp_b2l-league';
