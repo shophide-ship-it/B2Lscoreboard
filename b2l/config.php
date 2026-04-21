@@ -1,50 +1,23 @@
-<?php
-exit("設定ファイルは読み込まれています"); // これを足す
-// config.php の接続設定を以下に差し替え
-define('DB_HOST', '210.224.185.153'); // ホスト名の代わりにIPを直接指定
-define('DB_NAME', 'kasugai-sp_b2l-league');
-define('DB_USER', 'kasugai-sp_b2l-league');
-define('DB_PASS', 'B2L_db2025secure');                 // ← ★ここを確認
-
-// 以下は変更不要
-define('DB_CHARSET', 'utf8mb4');
-define('SITE_NAME', 'B2L LEAGUE');
-
-define('SITE_URL', 'https://kasugai-sp.sakura.ne.jp/b2l');
-define('BASE_PATH', '/b2l');
-define('ADMIN_USER', 'admin');
-define('ADMIN_PASS', 'b2league2024');
-
 function getDB() {
-    static $pdo = null;
-    if ($pdo === null) {
-        try {
-            // charsetを一旦外して接続だけを確認
-            $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME; 
-            $pdo = new PDO($dsn, DB_USER, DB_PASS);
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch (PDOException $e) {
-            // エラーが出た場合、何が原因か詳細を出す
-            exit('DB接続エラー詳細: ' . $e->getMessage());
-        }
+    $host = 'mysql80.kasugai-sp.sakura.ne.jp';
+    $db   = 'kasugai-sp_b2l-league';
+    $user = 'kasugai-sp_b2l-league';
+    $pass = 'X_MJJk5CfDwv4nf';
+
+    try {
+        // オプションを追加して接続を強化
+        $dsn = "mysql:host=$host;dbname=$db;charset=utf8mb4";
+        $pdo = new PDO($dsn, $user, $pass, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_TIMEOUT => 5 // 5秒でタイムアウト
+        ]);
+        return $pdo;
+    } catch (PDOException $e) {
+        // 500エラーにならず、エラー内容を強制的に表示して停止する
+        echo "<div style='background:#fee;color:#c00;padding:20px;border:2px solid #c00;'>";
+        echo "<h2>DB接続テスト失敗</h2>";
+        echo "原因: " . htmlspecialchars($e->getMessage());
+        echo "</div>";
+        exit;
     }
-    return $pdo;
 }
-
-function getDivisionName($division) {
-    $names = [1 => '1部', 2 => '2部', 3 => '3部'];
-    return $names[$division] ?? '';
-}
-
-function getPositionName($pos) {
-    $positions = [
-        'PG' => 'ポイントガード', 'SG' => 'シューティングガード',
-        'SF' => 'スモールフォワード', 'PF' => 'パワーフォワード', 'C' => 'センター'
-    ];
-    return $positions[$pos] ?? $pos;
-}
-
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-?>
