@@ -4,7 +4,7 @@ exit("設定ファイルは読み込まれています"); // これを足す
 define('DB_HOST', '210.224.185.153'); // ホスト名の代わりにIPを直接指定
 define('DB_NAME', 'kasugai-sp_b2l-league');
 define('DB_USER', 'kasugai-sp_b2l-league');
-define('DB_PASS', 'X_MJJk5CfDwv4nf');                 // ← ★ここを確認
+define('DB_PASS', 'B2L_db2025secure');                 // ← ★ここを確認
 
 // 以下は変更不要
 define('DB_CHARSET', 'utf8mb4');
