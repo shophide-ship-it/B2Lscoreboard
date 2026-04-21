@@ -2,7 +2,7 @@ function getDB() {
     $host = 'mysql80.kasugai-sp.sakura.ne.jp';
     $db   = 'kasugai-sp_b2l-league';
     $user = 'kasugai-sp_b2l-league';
-    $pass = 'X_MJJk5CfDwv4nf';
+    $pass = 'B2L_db2025secure';
 
     try {
         // オプションを追加して接続を強化
