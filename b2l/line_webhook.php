@@ -1,3 +1,7 @@
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    echo "LINE Webhookは正常に稼働しています。LINEアプリから操作してください。";
+    exit;
+}
 <?php
 // LINEからのアクセスであることの検証（簡易版）
 $json = file_get_contents('php://input');
