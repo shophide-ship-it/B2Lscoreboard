@@ -1,4 +1,15 @@
 <?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+// ファイル書き込みテスト
+if (file_put_contents('test_status.txt', 'Checking...')) {
+    echo "書き込み権限OK";
+} else {
+    echo "書き込み権限NG：フォルダのパーミッションを確認してください";
+}
+exit;
+<?php
 // ブラウザで開いた時に強制的にファイルを作るテスト
 file_put_contents('test_write.txt', 'write test ok: ' . date('Y-m-d H:i:s'));
 echo "Test file created.";
@@ -49,14 +60,3 @@ if ($event['type'] == 'message' && $event['message']['type'] == 'text') {
         $db->close();
     }
 }
-<?php
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
-// ファイル書き込みテスト
-if (file_put_contents('test_status.txt', 'Checking...')) {
-    echo "書き込み権限OK";
-} else {
-    echo "書き込み権限NG：フォルダのパーミッションを確認してください";
-}
-exit;
