@@ -1,69 +1,47 @@
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    echo "LINE Webhookは正常に稼働しています。LINEアプリから操作してください。";
-    exit;
-}
 <?php
-// LINEからのアクセスであることの検証（簡易版）
+// LINEからのデータを取得
 $json = file_get_contents('php://input');
 $data = json_decode($json, true);
 
-// イベントがない場合は終了
+// 届いたデータをそのままファイルに保存して中身を確認する（デバッグ用）
+file_put_contents('debug.txt', $json);
+
 if (empty($data['events'])) exit;
 
 $event = $data['events'][0];
-$lineUserId = $event['source']['userId']; // 送信者のLINE User ID
+$lineUserId = $event['source']['userId'];
 
-// メッセージイベントの場合
 if ($event['type'] == 'message' && $event['message']['type'] == 'text') {
-    $text = trim($event['message']['text']); // 送られてきたテキスト
+    $text = trim($event['message']['text']);
     
-    // 数字だけが送られてきたかチェック（例：「1」や「24」）
     if (is_numeric($text)) {
         $teamId = (int)$text;
 
-        // 1〜24の範囲内かチェック
-        if ($teamId >= 1 && $teamId <= 24) {
-            
-            // --- データベース接続 (ご自身の環境に合わせて修正してください) ---
-            $db = new mysqli('mysql3114.db.sakura.ne.jp', 'kasugai-sp_b2l-league', 'B2L_db2025secure', 'kasugai-sp_b2l-league');
-            
-            // line_user_id を更新
-            $stmt = $db->prepare("UPDATE teams SET line_user_id = ? WHERE id = ?");
-            $stmt->bind_param("si", $lineUserId, $teamId);
-            
-            if ($stmt->execute()) {
-                $replyText = "連携完了！\nチームID: " . $teamId . " の代表者として登録しました。";
-            } else {
-                $replyText = "エラーが発生しました。時間を置いて再度お試しください。";
-            }
-            $db->close();
-            
-        } else {
-            $replyText = "チームIDは1〜24の間で入力してください。";
-        }
-        
-        // --- 応答メッセージを送る (Messaging API) ---
-        sendReply($event['replyToken'], $replyText);
-    }
-}
+        // --- データベース接続設定を確認してください ---
+        // さくらインターネットの場合、localhostで動かないことがあります
+        $host = 'mysqlXXX.db.sakura.ne.jp'; // さくらの管理画面で確認できる「データベースサーバ」
+        $user = 'ユーザー名';
+        $pass = 'パスワード';
+        $dbname = 'kasugai-sp_b2l-league';
 
-// 応答用関数
-function sendReply($replyToken, $text) {
-    $accessToken = 'kbZCHXeFaL7WyqEPU/MW45EnWweTNjTDkKkMXlT+Cf2qzyrDkG3v9EG2+lFPY0Xc9uJZznCnMd6ERm/gLZRBy7Oq8M15DP66qRt/B2K1IPKFjZgGb2S9TogAJM/rlNMkNcX0C1i8f2Cqsvi4z6UydQdB04t89/1O/w1cDnyilFU=';
-    $url = 'https://api.line.me/v2/bot/message/reply';
-    $postData = [
-        'replyToken' => $replyToken,
-        'messages' => [['type' => 'text', 'text' => $text]]
-    ];
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        'Content-Type: application/json',
-        'Authorization: Bearer ' . $accessToken
-    ]);
-    curl_exec($ch);
-    curl_close($ch);
+        $db = new mysqli($host, $user, $pass, $dbname);
+        
+        if ($db->connect_error) {
+            file_put_contents('debug.txt', "DB接続エラー: " . $db->connect_error, FILE_APPEND);
+            exit;
+        }
+
+        // 文字コード設定（文字化け防止）
+        $db->set_charset("utf8mb4");
+
+        $stmt = $db->prepare("UPDATE teams SET line_user_id = ? WHERE id = ?");
+        $stmt->bind_param("si", $lineUserId, $teamId);
+        
+        if ($stmt->execute()) {
+            file_put_contents('debug.txt', "\n更新成功: Team {$teamId} to {$lineUserId}", FILE_APPEND);
+        } else {
+            file_put_contents('debug.txt', "\n更新失敗: " . $stmt->error, FILE_APPEND);
+        }
+        $db->close();
+    }
 }
