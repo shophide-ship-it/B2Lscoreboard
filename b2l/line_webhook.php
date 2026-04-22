@@ -34,9 +34,9 @@ if ($event['type'] == 'message' && $event['message']['type'] == 'text') {
 
         // --- データベース接続設定を確認してください ---
         // さくらインターネットの場合、localhostで動かないことがあります
-        $host = 'mysqlXXX.db.sakura.ne.jp'; // さくらの管理画面で確認できる「データベースサーバ」
-        $user = 'ユーザー名';
-        $pass = 'パスワード';
+        $host = 'mysql3114.db.sakura.ne.jp'; // さくらの管理画面で確認できる「データベースサーバ」
+        $user = 'kasugai-sp_b2l-league';
+        $pass = 'B2L_db2025secure';
         $dbname = 'kasugai-sp_b2l-league';
 
         $db = new mysqli($host, $user, $pass, $dbname);
