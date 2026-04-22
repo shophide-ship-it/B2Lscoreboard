@@ -25,7 +25,7 @@ if ($event['type'] == 'message' && $event['message']['type'] == 'text') {
         if ($teamId >= 1 && $teamId <= 24) {
             
             // --- データベース接続 (ご自身の環境に合わせて修正してください) ---
-            $db = new mysqli('localhost', 'kasugai-sp_b2l-league', 'B2L_db2025secure', 'kasugai-sp_b2l-league');
+            $db = new mysqli('mysql3114.db.sakura.ne.jp', 'kasugai-sp_b2l-league', 'B2L_db2025secure', 'kasugai-sp_b2l-league');
             
             // line_user_id を更新
             $stmt = $db->prepare("UPDATE teams SET line_user_id = ? WHERE id = ?");
