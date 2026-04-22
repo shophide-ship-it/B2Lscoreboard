@@ -1,4 +1,8 @@
 <?php
+// ブラウザで開いた時に強制的にファイルを作るテスト
+file_put_contents('test_write.txt', 'write test ok: ' . date('Y-m-d H:i:s'));
+echo "Test file created.";
+exit;
 // LINEからのデータを取得
 $json = file_get_contents('php://input');
 $data = json_decode($json, true);
