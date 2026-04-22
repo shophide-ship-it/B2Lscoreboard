@@ -1,4 +1,5 @@
 <?php
+file_put_contents('debug.txt', "--- START ---\n", FILE_APPEND);
 $logFile = 'debug.txt';
 $now = date('Y-m-d H:i:s');
 
