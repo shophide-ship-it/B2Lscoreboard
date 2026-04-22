@@ -49,3 +49,14 @@ if ($event['type'] == 'message' && $event['message']['type'] == 'text') {
         $db->close();
     }
 }
+<?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+// ファイル書き込みテスト
+if (file_put_contents('test_status.txt', 'Checking...')) {
+    echo "書き込み権限OK";
+} else {
+    echo "書き込み権限NG：フォルダのパーミッションを確認してください";
+}
+exit;
