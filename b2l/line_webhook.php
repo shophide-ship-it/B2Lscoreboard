@@ -49,7 +49,7 @@ if ($event['type'] == 'message' && $event['message']['type'] == 'text') {
 
 // 応答用関数
 function sendReply($replyToken, $text) {
-    $accessToken = 'あなたのチャネルアクセストークン';
+    $accessToken = 'kbZCHXeFaL7WyqEPU/MW45EnWweTNjTDkKkMXlT+Cf2qzyrDkG3v9EG2+lFPY0Xc9uJZznCnMd6ERm/gLZRBy7Oq8M15DP66qRt/B2K1IPKFjZgGb2S9TogAJM/rlNMkNcX0C1i8f2Cqsvi4z6UydQdB04t89/1O/w1cDnyilFU=';
     $url = 'https://api.line.me/v2/bot/message/reply';
     $postData = [
         'replyToken' => $replyToken,
