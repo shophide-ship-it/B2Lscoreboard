@@ -77,7 +77,7 @@ $reboundLeaders = $pdo->query("
         <!-- Recent Games -->
         <section class="mb-3">
             <div class="section-header">
-                <h2>最近の試合</h2>
+                <h2>試合日程＆結果</h2>
                 <a href="<?= url('schedule.php') ?>" class="view-all">すべて見る →</a>
             </div>
             <?php if (empty($recentGames)): ?>
