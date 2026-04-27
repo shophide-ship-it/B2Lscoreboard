@@ -50,6 +50,7 @@ if ($selGame) {
             <a href="<?= url('admin/players.php') ?>"><span class="icon">👤</span> 選手管理</a>
             <a href="<?= url('admin/games.php') ?>"><span class="icon">📅</span> 試合管理</a>
             <a href="<?= url('admin/stats.php') ?>" class="active"><span class="icon">📈</span> スタッツ入力</a>
+            <a href="<?= url('admin/live-stats.php') ?>"><span class="icon">🔴</span> ライブ入力</a>
             <a href="<?= url('index.php') ?>"><span class="icon">🌐</span> サイト表示</a>
             <a href="<?= url('admin/index.php?action=logout') ?>"><span class="icon">🚪</span> ログアウト</a>
         </nav>
