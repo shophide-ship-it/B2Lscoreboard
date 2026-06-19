@@ -38,7 +38,7 @@ $log->execute([$playerId]); $log = $log->fetchAll();
 </head>
 <body>
     <header class="main-header">
-        <div class="header-top"><div class="header-top-inner"><a href="<?= url('admin/') ?>">管理ページ</a></div></div>
+        <div class="header-top"><div class="header-top-inner"><a href="<?= url('admin/') ?>"> </a></div></div>
         <div class="nav-container">
             <a href="<?= url('index.php') ?>" class="logo"><span class="logo-icon">🏀</span><span class="logo-text">B2L <span>LEAGUE</span></span></a>
             <button class="mobile-menu-btn">☰</button>
@@ -117,7 +117,7 @@ $log->execute([$playerId]); $log = $log->fetchAll();
             <?php endif; ?>
         </section>
     </div>
-    <footer class="main-footer"><div class="footer-content"><div class="footer-logo">B2L <span>LEAGUE</span></div><div class="footer-copy">© 2024 B2L League.</div></div></footer>
+    <footer class="main-footer"><div class="footer-content"><div class="footer-logo">B2L <span>LEAGUE</span></div><div class="footer-copy">© 2025-26 B2L League.</div></div></footer>
     <script src="<?= url('js/app.js') ?>"></script>
 </body>
 </html>

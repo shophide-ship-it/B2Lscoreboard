@@ -37,7 +37,7 @@ $games->execute([$teamId,$teamId]); $games = $games->fetchAll();
 </head>
 <body>
     <header class="main-header">
-        <div class="header-top"><div class="header-top-inner"><a href="<?= url('admin/') ?>">管理ページ</a></div></div>
+        <div class="header-top"><div class="header-top-inner"><a href="<?= url('admin/') ?>"> </a></div></div>
         <div class="nav-container">
             <a href="<?= url('index.php') ?>" class="logo"><span class="logo-icon">🏀</span><span class="logo-text">B2L <span>LEAGUE</span></span></a>
             <button class="mobile-menu-btn">☰</button>

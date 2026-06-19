@@ -1,14 +1,14 @@
 <?php
 // データベース設定
-define('DB_HOST', 'mysql3114.db.sakura.ne.jp');
-define('DB_NAME', 'kasugai-sp_b2l-league');
-define('DB_USER', 'kasugai-sp_b2l-league');
-define('DB_PASS', 'B2L_db2025secure');
+define('DB_HOST', 'mysql3116.db.sakura.ne.jp');
+define('DB_NAME', 'b2lspace_b2l-league');
+define('DB_USER', 'b2lspace_b2l-league');
+define('DB_PASS', 'X_MJJk5CfDwv4nf');
 define('DB_CHARSET', 'utf8mb4');
 
 // サイト設定
 define('SITE_NAME', 'B2L LEAGUE');
-define('SITE_URL', 'https://kasugai-sp.sakura.ne.jp/b2l');
+define('SITE_URL', 'https://b2lspace.sakura.ne.jp/b2l');
 define('BASE_PATH', '/b2l');
 define('ADMIN_USER', 'admin');
 define('ADMIN_PASS', 'b2league2024');
@@ -39,7 +39,7 @@ function getDivisionName($division) {
 
 // ポジション名
 function getPositionName($pos) {
-    $positions = [
+    $positions = [      
         'PG' => 'ポイントガード',
         'SG' => 'シューティングガード',
         'SF' => 'スモールフォワード',
